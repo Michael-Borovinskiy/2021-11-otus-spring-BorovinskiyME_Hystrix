@@ -1,0 +1,24 @@
+spring:
+    mongodb:
+      embedded:
+        version: 3.5.5
+    data:
+      mongodb:
+        #host: localhost
+        port: 0 # 27017
+        database: lib
+#    main:
+#      allow-circular-references: true
+    messages:
+      encoding: UTF-8
+mongock:
+  #runner-type: "ApplicationRunner"  default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.spring.hystrixapp.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+      read-concern: local
+server:
+  port: 8085

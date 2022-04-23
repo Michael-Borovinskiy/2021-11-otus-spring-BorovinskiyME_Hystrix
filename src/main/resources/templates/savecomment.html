@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Save comment</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        input {
+            width: 500px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+<form id="savecomment-form" th:action="@{/savecomment}" action="savecomment.html" th:method="post" th:object="${comment}" >
+    <h3>Save Comment:</h3>
+
+
+    <div class="row">
+        <label for="comment-name-input">Comment:</label>
+        <input id="comment-name-input" name="commentText"  type="text" th:value="${comment.commentText}" value="John Doe"/>
+        <div class="errors" th:if="${#fields.hasErrors('commentText')}" th:errors="">Wrong commenttext error</div>
+    </div>
+
+    <div class="row">
+        <label for="comment-book-input">Book:</label>
+        <input id="comment-book-input" name="book"  type="text" readonly="true" th:value="${comment.book.id}" value="John Doe"/>
+        <div class="errors" th:if="${#fields.hasErrors('book')}" th:errors="">Wrong book error</div>
+    </div>
+
+    <div class="row">
+        <button type="submit" th:text="Save">Save</button>
+        <a href="list.html" th:href="@{/}"><button type="button" th:text="Cancel">Cancel</button></a>
+    </div>
+</form>
+
+</body>
+</html>

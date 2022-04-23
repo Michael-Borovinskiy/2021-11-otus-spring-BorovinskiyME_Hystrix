@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Add book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .books {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .books tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .books td:last-child, td:first-child {
+            width: 50px;
+        }
+
+        input {
+            width: 500px;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        .form-control {
+            display: inline-block;
+            width: 150px;
+        }
+
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/listmark.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- Book -->
+<form id="save-form" th:action="@{/savebook}" action="savebook.html" th:method="post" th:object="${book}" >
+    <h3>Save Book:</h3>
+
+    <div class="row">
+        <label for="book-name-input">Title:</label>
+        <input id="book-name-input" name="title" type="text"  value="John Doe"/>
+        <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="">Wrong title error</div>
+    </div>
+
+    <div class="row">
+        <label for="author-name-input">Author:</label>
+        <select class="form-control" th:field="${author.fullName}"  id="author-name-input">
+        <option disabled="true" value="0" >Выберите автора</option>
+        <option name="author" type="text" th:each="authorN : ${authors}" th:value="${authorN.fullName}" th:text="${authorN.fullName}"></option> <!-- th:text="${authorN}" th:text="select author" -->
+    </select>
+    </div>
+
+    <div class="row">
+        <label for="genre-name-input">Genre:</label>
+        <select class="form-control" th:field="${genre.genreName}"  id="genre-name-input">
+            <option disabled="true" value="0">Выберите жанр</option>
+            <option name="genre" type="text" th:each="genreN : ${genres}" th:value="${genreN.genreName}" th:text="${genreN.genreName}"></option>
+        </select>
+    </div>
+
+    <div class="row">
+        <button type="submit" th:text="Save">Save</button>
+        <a href="list.html" th:href="@{/}"><button type="button" th:text="Cancel">Cancel</button></a>
+    </div>
+</form>
+
+</body>
+</html>
