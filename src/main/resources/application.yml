@@ -4,11 +4,9 @@ spring:
         version: 3.5.5
     data:
       mongodb:
-        #host: localhost
-        port: 0 # 27017
+        host: localhost
+        port:  0 # 27017
         database: lib
-#    main:
-#      allow-circular-references: true
     messages:
       encoding: UTF-8
 mongock:
@@ -22,3 +20,40 @@ mongock:
       read-concern: local
 server:
   port: 8085
+hystrix:
+  command:
+    getBookByIdKey:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+    getBooksKey:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+    getSaveBookKey:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+    getUpdateBookKey:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+    getDeleteBookKey:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+    getCommentsBookKey:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"

@@ -1,12 +1,12 @@
 package ru.otus.spring.hystrixapp.domain;
 
-import lombok.AllArgsConstructor;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@AllArgsConstructor
+
 @Document(collection = "books")
 public class Book {
 
@@ -19,6 +19,12 @@ public class Book {
     public Book() {
     }
 
+    public Book(String id, String title, List<Author> author, List<Genre> genre) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+    }
 
     public Book(String title, List<Author> author, List<Genre> genre) {
         this.title = title;
