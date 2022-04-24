@@ -26,32 +26,32 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 0
+            timeoutInMilliseconds: 2000
     getBooksKey:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 0
+            timeoutInMilliseconds: 2000
     getSaveBookKey:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 0
+            timeoutInMilliseconds: 2000
     getUpdateBookKey:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 0
+            timeoutInMilliseconds: 2000
     getDeleteBookKey:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 0
+            timeoutInMilliseconds: 2000
     getCommentsBookKey:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 0
+            timeoutInMilliseconds: 2000
 management:
   endpoints:
     web:
