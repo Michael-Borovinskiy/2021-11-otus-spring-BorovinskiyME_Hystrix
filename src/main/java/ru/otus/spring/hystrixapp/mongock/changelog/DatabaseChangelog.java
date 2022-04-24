@@ -13,6 +13,7 @@ import ru.otus.spring.hystrixapp.repo.CommentRepository;
 import ru.otus.spring.hystrixapp.repo.GenreRepository;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -28,8 +29,11 @@ public class DatabaseChangelog {
         public void insert1984(BookRepository repository, AuthorRepository authorRepository, GenreRepository genreRepository, CommentRepository commentRepository) {
             Author author = authorRepository.save(new Author("Orwell"));
             Genre genre = genreRepository.save(new Genre("Science Fiction"));
-
-            Book book = repository.save(new Book("1984", List.of(author), List.of(genre)));
+            List<Author> listAuthor = new ArrayList<>();
+            List<Genre> listGenre = new ArrayList<>();
+            listAuthor.add(author);
+            listGenre.add(genre);
+            Book book = repository.save(new Book("1984", listAuthor, listGenre));
             commentRepository.save(new Comment("perfect", book ));
 }
 
@@ -37,8 +41,12 @@ public class DatabaseChangelog {
         public void insertJaneEyre(BookRepository repository, AuthorRepository authorRepository, GenreRepository genreRepository, CommentRepository commentRepository) {
             Author author = authorRepository.save(new Author("Bronte"));
             Genre genre = genreRepository.save(new Genre("Novel"));
+            List<Author> listAuthor = new ArrayList<>();
+            List<Genre> listGenre = new ArrayList<>();
+            listAuthor.add(author);
+            listGenre.add(genre);
 
-            Book book = repository.save(new Book("Jane Eyre", List.of(author), List.of(genre)));
+            Book book = repository.save(new Book("Jane Eyre", listAuthor, listGenre));
             commentRepository.save(new Comment("not so bad",  book));
             commentRepository.save(new Comment("excellent work",  book));
         }

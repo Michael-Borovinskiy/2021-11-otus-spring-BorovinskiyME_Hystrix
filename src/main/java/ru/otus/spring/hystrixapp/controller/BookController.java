@@ -6,7 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.otus.spring.hystrixapp.domain.Author;
 import ru.otus.spring.hystrixapp.domain.Book;
+import ru.otus.spring.hystrixapp.domain.Comment;
+import ru.otus.spring.hystrixapp.domain.Genre;
 import ru.otus.spring.hystrixapp.dto.AuthorDto;
 import ru.otus.spring.hystrixapp.dto.BookDto;
 import ru.otus.spring.hystrixapp.dto.CommentDto;
@@ -34,8 +37,8 @@ public class BookController {
 
     @GetMapping("/edit")
     public String editPage(@RequestParam("id") String id, Model model) throws NullDataException {
-        var book = libService.findById(id);
-        var comments = libService.findAllCommentsByBook(id);
+        Book book = libService.findById(id);
+        List<Comment> comments = libService.findAllCommentsByBook(id);
         model.addAttribute("book", book);
         model.addAttribute("author", book.getAuthor().get(0));
         model.addAttribute("genre", book.getGenre().get(0));
@@ -57,11 +60,11 @@ public class BookController {
 
     @GetMapping("/savebook")
     public String editPageSave(Model model) throws NullDataException {
-        var book = new BookDto();
-        var author = new AuthorDto();
-        var genre = new GenreDto();
-        var authors = libService.findAllAuthors();
-        var genres = libService.findAllGenres();
+        BookDto book = new BookDto();
+        AuthorDto author = new AuthorDto();
+        GenreDto genre = new GenreDto();
+        List<Author> authors = libService.findAllAuthors();
+        List<Genre> genres = libService.findAllGenres();
         model.addAttribute("book", book);
         model.addAttribute("author", author);
         model.addAttribute("genre", genre);
@@ -86,13 +89,13 @@ public class BookController {
     @RequestMapping(value="/delete", method = RequestMethod.POST)
     public String deletePage (@RequestParam("id") String id) {
         libService.deleteBookByIdCascade(id);
-        return "delete";
+        return "delete"; //"delete"
     }
 
     @GetMapping("/savecomment")
     public String editPageSaveComment(@RequestParam("id") String id, Model model) throws NullDataException {
-        var book = libService.findById(id);
-        var comment = libService.findAllCommentsByBook(id).get(0);
+        Book book = libService.findById(id);
+        Comment comment = libService.findAllCommentsByBook(id).get(0);
         model.addAttribute("bookss", book);
         model.addAttribute("comment", comment);
         return "savecomment";

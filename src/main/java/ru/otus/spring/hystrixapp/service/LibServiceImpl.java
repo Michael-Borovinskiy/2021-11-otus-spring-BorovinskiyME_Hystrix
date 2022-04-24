@@ -1,6 +1,6 @@
 package ru.otus.spring.hystrixapp.service;
 
-import lombok.RequiredArgsConstructor;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.hystrixapp.domain.Author;
 import ru.otus.spring.hystrixapp.domain.Book;
@@ -9,10 +9,9 @@ import ru.otus.spring.hystrixapp.domain.Genre;
 import ru.otus.spring.hystrixapp.exception.NullDataException;
 import ru.otus.spring.hystrixapp.repo.*;
 
-
 import java.util.List;
 
-@RequiredArgsConstructor
+
 @Service
 public class LibServiceImpl implements LibService {
 
@@ -22,15 +21,40 @@ public class LibServiceImpl implements LibService {
     private final GenreRepository genreRepository;
     private final CommentRepository commentRepository;
 
+    public LibServiceImpl(BookRepository bookRepository, BookRepositoryCustomImpl bookRepositoryCustom, AuthorRepository authorRepository, GenreRepository genreRepository, CommentRepository commentRepository) {
+        this.bookRepository = bookRepository;
+        this.bookRepositoryCustom = bookRepositoryCustom;
+        this.authorRepository = authorRepository;
+        this.genreRepository = genreRepository;
+        this.commentRepository = commentRepository;
+    }
 
     @Override
+    @HystrixCommand(commandKey = "getBookByIdKey", fallbackMethod = "getDefaultValueBookById")
     public Book findById(String id) throws NullDataException {
         return bookRepository.findById(id).orElseThrow(NullDataException::new);
     }
 
+    public Book getDefaultValueBookById(String id) throws NullDataException {
+
+        return new Book("NULL",
+                "NULL",
+                List.of(new Author("NULL", "NULL")),
+                List.of(new Genre("NULL", "NULL")));
+    }
+
     @Override
+    @HystrixCommand(commandKey = "getBooksKey", fallbackMethod = "getDefaultValueAllBooks")
     public List<Book> findAllBooks() {
         return bookRepository.findAll();
+    }
+
+    public List<Book> getDefaultValueAllBooks() throws NullDataException {
+
+        return List.of(new Book("NULL",
+                "NULL",
+                List.of(new Author("NULL", "NULL")),
+                List.of(new Genre("NULL", "NULL"))));
     }
 
     @Override
@@ -39,6 +63,7 @@ public class LibServiceImpl implements LibService {
     }
 
     @Override
+    @HystrixCommand(commandKey = "getSaveBookKey", fallbackMethod = "getDefaultSaveBook")
     public Book saveBook(String title, String authorName, String genreName) {
         Author author;
         Genre genre;
@@ -57,14 +82,31 @@ public class LibServiceImpl implements LibService {
         return bookRepository.save(new Book(title, List.of(author), List.of(genre)));
     }
 
+    public Book getDefaultSaveBook(String title, String authorName, String genreName) throws NullDataException {
+
+        return new Book("NULL",
+                "NULL",
+                List.of(new Author("NULL", "NULL")),
+                List.of(new Genre("NULL", "NULL")));
+    }
+
+
     @Override
+    @HystrixCommand(commandKey = "getUpdateBookKey", fallbackMethod = "getDefaultUpdateBook")
     public void updateBookTitle(String id, String title) {
         bookRepositoryCustom.updateBookTitleById(id, title);
     }
 
+    public void getDefaultUpdateBook(String id, String title) throws NullDataException {
+    }
+
     @Override
+    @HystrixCommand(commandKey = "getDeleteBookKey", fallbackMethod = "getDefaultDeleteBook")
     public void deleteBookByIdCascade(String id) {
         bookRepositoryCustom.deleteBookCommentsCascade(id);
+    }
+
+    public void getDefaultDeleteBook(String id) throws NullDataException {
     }
 
     @Override
@@ -80,9 +122,19 @@ public class LibServiceImpl implements LibService {
     }
 
     @Override
+    @HystrixCommand(commandKey = "getCommentsBookKey", fallbackMethod = "getDefaultCommentsBook")
     public List<Comment> findAllCommentsByBook(String idBook) throws NullDataException {
         return commentRepository.findCommentsByBook_Id(idBook);
     }
+
+    public List<Comment> getDefaultCommentsBook(String idBook) throws NullDataException {
+
+        return List.of(new Comment("NULL",
+                new Book("NULL", "NULL",
+                        List.of(new Author("NULL", "NULL")),
+                        List.of(new Genre("NULL", "NULL")))));
+    }
+
 
     @Override
     public Author findAuthorById(String id) throws NullDataException {
